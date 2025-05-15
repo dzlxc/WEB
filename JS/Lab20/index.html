@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота 20</title>
+</head>
+<body>
+<h1>Лабораторна робота 20</h1>
+
+<p id="user-info"></p>
+<p id="admin-info"></p>
+<p id="bank-account-info"></p>
+
+<script>
+    class User {
+        constructor(name, email) {
+            this.name = name;
+            this.email = email;
+        }
+        greet() { return `Привіт, ${this.name}!` }
+    }
+
+    class Admin extends User {
+        constructor(name, email, role) {
+            super(name, email);
+            this.role = role;
+        }
+        displayRole() { return `${this.name} має роль: ${this.role}` }
+    }
+
+    class BankAccount {
+        #balance;
+        constructor(balance) { this.#balance = balance; }
+        deposit(amount) { this.#balance += amount; }
+        withdraw(amount) { this.#balance -= amount; }
+        getBalance() { return this.#balance; }
+    }
+
+    const user1 = new User('Iana', 'Iana@example.com');
+    document.getElementById('user-info').textContent = user1.greet();
+
+    const admin1 = new Admin('Misha', 'misha@example.com', 'Адміністратор');
+    document.getElementById('admin-info').textContent = admin1.greet() + '. ' + admin1.displayRole();
+
+    const account1 = new BankAccount(1000);
+    account1.deposit(500);
+    account1.withdraw(200);
+    document.getElementById('bank-account-info').textContent = `Ваш баланс: ${account1.getBalance()}`;
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Лабораторна робота 8</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            color: #333;
+        }
+
+        .section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Завдання 1 */
+        .block1 {
+            width: 200px;
+            height: 100px;
+            border: 3px solid blue;
+            background-color: #e0f0ff;
+        }
+
+        .block2 {
+            width: 200px;
+            height: 100px;
+            margin-left: 50px;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #f0ffe0;
+        }
+
+        /* Завдання 2 */
+        .box1 {
+            width: 250px;
+            height: 120px;
+            padding: 10px;
+            margin: 15px;
+            border: 2px dashed green;
+            background-color: #fefbd8;
+        }
+
+        .box2 {
+            width: 200px;
+            height: 80px;
+            padding: 20px;
+            margin: 30px;
+            border: 3px solid orange;
+            background-color: #d8fefb;
+        }
+
+        .box3 {
+            width: 300px;
+            height: 100px;
+            padding: 5px;
+            margin: 10px;
+            border: 4px dotted purple;
+            background-color: #fbd8fe;
+        }
+
+        /* Завдання 3 */
+        .without-box-sizing {
+            width: 300px;
+            padding: 20px;
+            border: 5px solid red;
+            background-color: #ffe0e0;
+            box-sizing: content-box; /* за замовчуванням */
+            margin-bottom: 20px;
+        }
+
+        .with-box-sizing {
+            width: 300px;
+            padding: 20px;
+            border: 5px solid green;
+            background-color: #e0ffe0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Лабораторна робота 8</h1>
+
+<div class="section">
+    <h2>Завдання 1</h2>
+    <div class="block1">Перший блок</div>
+    <div class="block2">Другий блок</div>
+</div>
+
+<div class="section">
+    <h2>Завдання 2</h2>
+    <div class="box1">Блок 1</div>
+    <div class="box2">Блок 2</div>
+    <div class="box3">Блок 3</div>
+</div>
+
+<div class="section">
+    <h2>Завдання 3 <code>box-sizing</code></h2>
+    <div class="without-box-sizing">
+        Без box-sizing (content-box)<br>
+        Фактична ширина буде > 300px
+    </div>
+    <div class="with-box-sizing">
+        З box-sizing: border-box<br>
+        Загальна ширина = 300px
+    </div>
+</div>
+
+</body>
+</html>

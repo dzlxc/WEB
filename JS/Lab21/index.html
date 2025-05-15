@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота 21</title>
+</head>
+<body>
+<h1>Лабораторна робота 21</h1>
+
+<h2>1. Деструктуризація об'єкта</h2>
+<p id="car-info"></p>
+
+<h2>2. Функція sum</h2>
+<p id="sum-result"></p>
+
+<h2>3. Оператор spread</h2>
+<p id="person-job-info"></p>
+
+<script>
+
+    const car = { make: 'Toyota', model: 'Corolla', year: 2020 };
+    const { make, model, year } = car;
+    document.getElementById('car-info').textContent = `Марка: ${make}, Модель: ${model}, Рік: ${year}`;
+
+    function sum(...numbers) {
+        return numbers.reduce((acc, num) => acc + num, 0);
+    }
+    document.getElementById('sum-result').textContent = `Сума чисел (1, 2, 3, 4): ${sum(1, 2, 3, 4)}`;
+
+    const person = { name: 'Мішка', age: 18 };
+    const jobInfo = { jobTitle: 'Програміст', salary: 5000 };
+    const personWithJob = { ...person, ...jobInfo };
+    document.getElementById('person-job-info').textContent = `Ім'я: ${personWithJob.name}, Вік: ${personWithJob.age}, Позиція: ${personWithJob.jobTitle}, Зарплата: ${personWithJob.salary}`;
+</script>
+</body>
+</html>

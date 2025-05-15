@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Лабораторна робота 5</title>
+</head>
+<body>
+<h2>Розклад уроків</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>День</th>
+        <th>Час</th>
+        <th>Предмет</th>
+        <th>Викладач</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td rowspan="2">Понеділок</td>
+        <td>09:00 - 10:30</td>
+        <td>Інформатика</td>
+        <td>Кучков</td>
+    </tr>
+    <tr>
+        <td>10:45 - 12:15</td>
+        <td>Фізика</td>
+        <td>Чушко</td>
+    </tr>
+    <tr>
+        <td>Вівторок</td>
+        <td>14:00 - 15:30</td>
+        <td colspan="2">Вільний час</td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="3">Всього занять</td>
+        <td>3</td>
+    </tr>
+    </tfoot>
+</table>
+
+<h2>Реєстрація</h2>
+<form>
+    <label>
+        Ім'я:
+        <input type="text" name="first_name" required>
+    </label><br><br>
+    <label>
+        Прізвище:
+        <input type="text" name="last_name" required>
+    </label><br><br>
+    <label>
+        Email:
+        <input type="email" name="email" required>
+    </label><br><br>
+    <label>
+        Пароль:
+        <input type="password" name="password" required minlength="6">
+    </label><br><br>
+
+    Стать:<br>
+    <label>
+        <input type="radio" name="gender" value="male" required>
+        Чоловік
+    </label><br>
+    <label>
+        <input type="radio" name="gender" value="female">
+        Жінка
+    </label><br><br>
+
+    Хобі:<br>
+    <label>
+        <input type="checkbox" name="hobbies" value="sport">
+        Дота
+    </label><br>
+    <label>
+        <input type="checkbox" name="hobbies" value="reading">
+        Дота
+    </label><br>
+    <label>
+        <input type="checkbox" name="hobbies" value="music">
+        Дота
+    </label><br><br>
+
+    <button type="submit">Зареєструватися</button>
+</form>
+</body>
+</html>

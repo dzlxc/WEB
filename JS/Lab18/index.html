@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота 18</title>
+    <script>
+
+        function arrayManipulation() {
+
+            let numbers = [1, 2, 3, 4, 5];
+
+            let doubled = numbers.map(num => num * 2);
+
+            let evenDoubled = doubled.filter(num => num % 2 === 0);
+
+            document.getElementById('arrayResult').innerHTML = "Подвоєні числа: " + doubled + "<br>Парні подвоєні числа: " + evenDoubled;
+        }
+
+        function sumTwoNumbers() {
+            let num1 = parseInt(document.getElementById('num1').value);
+            let num2 = parseInt(document.getElementById('num2').value);
+            let sum = num1 + num2;
+            document.getElementById('sumResult').textContent = "Сума: " + sum;
+        }
+
+        function studentInfo() {
+
+            let student = {
+                name: "Мішка",
+                age: 18,
+                group: "Біс 21",
+                displayInfo: function() {
+                    return "Ім'я: " + this.name + ", Вік: " + this.age + ", Група: " + this.group;
+                }
+            };
+
+            document.getElementById('studentResult').textContent = student.displayInfo();
+        }
+    </script>
+</head>
+<body>
+
+<h1>Лабораторна робота 18</h1>
+
+<h2>Масив чисел та методи map() і filter()</h2>
+<button onclick="arrayManipulation()">Показати результат</button>
+<p id="arrayResult"></p>
+
+<hr>
+
+<h2>Додавання двох чисел</h2>
+<input type="number" id="num1" placeholder="Перше число">
+<input type="number" id="num2" placeholder="Друге число">
+<button onclick="sumTwoNumbers()">Обчислити суму</button>
+<p id="sumResult"></p>
+
+<hr>
+
+<h2>Інформація про студента</h2>
+<button onclick="studentInfo()">Показати інформацію про студента</button>
+<p id="studentResult"></p>
+
+</body>
+</html>

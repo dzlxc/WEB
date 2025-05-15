@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Flexbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h2 {
+            margin-top: 40px;
+            color: #333;
+        }
+
+        /*Завдання 1*/
+        .task1-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            gap: 20px;
+            background-color: #e0f7fa;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .task1-item {
+            flex-basis: 100px;
+            flex-grow: 1;
+            height: 100px;
+            background-color: #4caf50;
+            color: white;
+            text-align: center;
+            line-height: 100px;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        /*Завдання 2*/
+        .task2-container {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            gap: 10px;
+            padding: 20px;
+            background-color: #fff3e0;
+            border-radius: 10px;
+        }
+
+        .task2-item {
+            flex: 1 1 200px;
+            height: 150px;
+            background-color: #ff9800;
+            color: white;
+            text-align: center;
+            line-height: 150px;
+            font-weight: bold;
+            min-width: 150px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .task2-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h2>Завдання 1</h2>
+<div class="task1-container">
+    <div class="task1-item">Елемент 1</div>
+    <div class="task1-item">Елемент 2</div>
+    <div class="task1-item">Елемент 3</div>
+</div>
+
+<h2>Завдання 2</h2>
+<div class="task2-container">
+    <div class="task2-item">1</div>
+    <div class="task2-item">2</div>
+    <div class="task2-item">3</div>
+    <div class="task2-item">4</div>
+    <div class="task2-item">5</div>
+</div>
+
+</body>
+</html>

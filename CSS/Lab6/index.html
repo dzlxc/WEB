@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Практична робота: Селектори та кольори</title>
+    <style>
+        h1 {
+            color: #2c3e50;
+            font-size: 36px;
+        }
+
+        .intro {
+            background-color: #f0f0f0;
+            color: #333333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #submitBtn {
+            background-color: #e74c3c;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #submitBtn:hover {
+            background-color: #c0392b;
+        }
+
+        #about li {
+            color: #3498db;
+        }
+
+        section {
+            background-color: hsl(200, 50%, 90%);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        p {
+            color: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Мій веб-проект</h1>
+</header>
+<main>
+    <section>
+        <h2>Основна секція</h2>
+        <p class="intro">Це вступний абзац.</p>
+        <p class="description">Опис проекту, який містить деякі важливі деталі.</p>
+        <button id="submitBtn">Натисніть мене</button>
+    </section>
+    <section id="about">
+        <h2>Про нас</h2>
+        <ul>
+            <li>Пункт 1</li>
+            <li>Пункт 2</li>
+            <li>Пункт 3</li>
+        </ul>
+    </section>
+</main>
+<footer>
+    <p>© 2025 Моє</p>
+</footer>
+</body>
+</html>

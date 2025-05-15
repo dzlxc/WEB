@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота 17</title>
+    <script>
+
+        function checkAge() {
+            let age = parseInt(document.getElementById('age').value);
+            let result = '';
+
+            if (age < 7) {
+                result = 'Дитина';
+            } else if (age >= 12 && age <= 16) {
+                result = 'Підліток';
+            } else if (age >= 25) {
+                result = 'Дорослий';
+            } else {
+                result = 'Вік не підпадає під жодну категорію';
+            }
+            document.getElementById('ageResult').textContent = result;
+        }
+
+        function showNumbers() {
+            let numbers = '';
+            for (let i = 1; i <= 15; i++) {
+                numbers += i + '<br>';
+            }
+            document.getElementById('numbers').innerHTML = numbers;
+        }
+
+        function multiplicationTable() {
+            let table = '';
+            for (let i = 1; i <= 10; i++) {
+                for (let j = 1; j <= 10; j++) {
+                    table += i + ' * ' + j + ' = ' + (i * j) + '<br>';
+                }
+                table += '<br>';
+            }
+            document.getElementById('multiplication').innerHTML = table;
+        }
+    </script>
+</head>
+<body>
+
+<h1>Лабораторна робота 17</h1>
+
+<h2>Введіть ваш вік</h2>
+<input type="number" id="age" placeholder="Введіть вік">
+<button onclick="checkAge()">Перевірити вік</button>
+<p id="ageResult"></p>
+
+<hr>
+
+<h2>Числа від 1 до 15</h2>
+<button onclick="showNumbers()">Показати числа</button>
+<div id="numbers"></div>
+
+<hr>
+
+<h2>Таблиця множення для чисел від 1 до 10</h2>
+<button onclick="multiplicationTable()">Показати таблицю множення</button>
+<div id="multiplication"></div>
+
+</body>
+</html>

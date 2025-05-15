@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Об'єкт Книга</title>
+</head>
+<body>
+<h1>Інформація про книгу</h1>
+<p id="book-info"></p>
+<p id="author-info"></p>
+
+<script>
+
+    let book = {
+        title: 'Майстер і Маргарита',
+        author: {
+            firstName: 'Михайло',
+            lastName: 'Булгаков',
+            birthYear: 1891,
+            nationality: 'Українець'
+        },
+        year: 1966,
+        genre: 'Роман',
+        pages: 448,
+        publisher: 'Молодь',
+
+
+        getInfo: function() {
+            return `Назва книги: ${this.title}, автор: ${this.author.firstName} ${this.author.lastName}, рік: ${this.year}, кількість сторінок: ${this.pages}, видавництво: ${this.publisher}`;
+        },
+
+
+        getAuthorInfo: function() {
+            return `Автор: ${this.author.firstName} ${this.author.lastName}, народився в ${this.author.birthYear}, національність: ${this.author.nationality}`;
+        }
+    };
+
+
+    document.getElementById('book-info').textContent = book.getInfo();
+    document.getElementById('author-info').textContent = book.getAuthorInfo();
+
+
+    delete book.genre;
+
+
+    if (!('genre' in book)) {
+        console.log('Властивість "жанр" видалена');
+    }
+
+
+    console.log(book.getInfo());
+</script>
+</body>
+</html>
