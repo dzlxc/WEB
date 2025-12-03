@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Додаток - Лабораторна 32</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        .message.error {
+            background: #fee;
+            color: #c00;
+            border: 1px solid #fcc;
+        }
+
+        .message.success {
+            background: #efe;
+            color: #0a0;
+            border: 1px solid #cfc;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 5px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #f0f0f0;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .user-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .user-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .user-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .user-card p {
+            color: #666;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .posts-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .posts-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #ccc;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #bbb;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .posts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .post-card.editing {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .post-header h3 {
+            color: #333;
+            flex: 1;
+        }
+
+        .post-id {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .post-body {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-user {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .icon-btn.edit {
+            color: #2196F3;
+        }
+
+        .icon-btn.delete {
+            color: #f44336;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🚀 CRUD Додаток - HTTP запити</h1>
+
+    <div id="message" class="message"></div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('users')">
+            👥 Користувачі (GET)
+        </button>
+        <button class="tab" onclick="switchTab('posts')">
+            📝 Пости (CRUD)
+        </button>
+    </div>
+
+    <div id="users-tab" class="tab-content active">
+        <div class="card">
+            <h2>Список користувачів</h2>
+            <div id="users-list" class="users-grid">
+                <div class="loading">Завантаження...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="posts-tab" class="tab-content">
+        <div class="posts-layout">
+            <div class="card">
+                <h2 id="form-title">Створити новий пост</h2>
+                <div class="form-group">
+                    <label for="post-title">Заголовок</label>
+                    <input type="text" id="post-title" placeholder="Введіть заголовок">
+                </div>
+                <div class="form-group">
+                    <label for="post-body">Текст поста</label>
+                    <textarea id="post-body" rows="4" placeholder="Введіть текст"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="post-userId">ID Користувача</label>
+                    <input type="number" id="post-userId" value="1" min="1" max="10">
+                </div>
+                <div class="btn-group">
+                    <button id="submit-btn" class="btn btn-primary" onclick="handleSubmit()">
+                        Створити
+                    </button>
+                    <button id="cancel-btn" class="btn btn-secondary" onclick="cancelEdit()" style="display: none;">
+                        Скасувати
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Список постів</h2>
+                <div id="posts-list" class="posts-list">
+                    <div class="loading">Завантаження...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'https://jsonplaceholder.typicode.com';
+    let editingPostId = null;
+    let posts = [];
+
+    // Показати повідомлення
+    function showMessage(text, type) {
+        const messageEl = document.getElementById('message');
+        messageEl.textContent = text;
+        messageEl.className = `message ${type} show`;
+        setTimeout(() => {
+            messageEl.classList.remove('show');
+        }, 3000);
+    }
+
+    // Перемикання вкладок
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        event.target.classList.add('active');
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+
+        if (tabName === 'posts' && posts.length === 0) {
+            fetchPosts();
+        }
+    }
+
+    // GET - Отримання користувачів
+    async function fetchUsers() {
+        try {
+            const response = await fetch(`${API_URL}/users`);
+            if (!response.ok) throw new Error('Не вдалося отримати користувачів');
+
+            const users = await response.json();
+            displayUsers(users);
+        } catch (error) {
+            showMessage(error.message, 'error');
+            document.getElementById('users-list').innerHTML =
+                `<div class="loading">Помилка завантаження</div>`;
+        }
+    }
+
+    // Відображення користувачів
+    function displayUsers(users) {
+        const container = document.getElementById('users-list');
+        container.innerHTML = users.map(user => `
+                <div class="user-card">
+                    <h3>${user.name}</h3>
+                    <p><strong>@${user.username}</strong></p>
+                    <p>📧 ${user.email}</p>
+                    <p>📱 ${user.phone}</p>
+                </div>
+            `).join('');
+    }
+
+    // GET - Отримання постів
+    async function fetchPosts() {
+        try {
+            const response = await fetch(`${API_URL}/posts?_limit=10`);
+            if (!response.ok) throw new Error('Не вдалося отримати пости');
+
+            posts = await response.json();
+            displayPosts();
+        } catch (error) {
+            showMessage(error.message, 'error');
+            document.getElementById('posts-list').innerHTML =
+                `<div class="loading">Помилка завантаження</div>`;
+        }
+    }
+
+    // Відображення постів
+    function displayPosts() {
+        const container = document.getElementById('posts-list');
+        if (posts.length === 0) {
+            container.innerHTML = '<div class="loading">Немає постів</div>';
+            return;
+        }
+
+        container.innerHTML = posts.map(post => `
+                <div class="post-card ${editingPostId === post.id ? 'editing' : ''}" id="post-${post.id}">
+                    <div class="post-header">
+                        <h3>${post.title}</h3>
+                        <span class="post-id">ID: ${post.id}</span>
+                    </div>
+                    <div class="post-body">${post.body}</div>
+                    <div class="post-footer">
+                        <span class="post-user">Користувач: ${post.userId}</span>
+                        <div class="post-actions">
+                            <button class="icon-btn edit" onclick="startEdit(${post.id})" title="Редагувати">
+                                ✏️
+                            </button>
+                            <button class="icon-btn delete" onclick="deletePost(${post.id})" title="Видалити">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    // POST - Створення нового поста
+    async function createPost() {
+        const title = document.getElementById('post-title').value.trim();
+        const body = document.getElementById('post-body').value.trim();
+        const userId = parseInt(document.getElementById('post-userId').value);
+
+        if (!title || !body) {
+            showMessage('Заповніть всі поля', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/posts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, body, userId })
+            });
+
+            if (!response.ok) throw new Error('Помилка створення поста');
+
+            const newPost = await response.json();
+            posts.unshift(newPost);
+            displayPosts();
+            clearForm();
+            showMessage('Пост успішно створено!', 'success');
+        } catch (error) {
+            showMessage(error.message, 'error');
+        }
+    }
+
+    // PUT - Оновлення поста
+    async function updatePost() {
+        const title = document.getElementById('post-title').value.trim();
+        const body = document.getElementById('post-body').value.trim();
+        const userId = parseInt(document.getElementById('post-userId').value);
+
+        if (!title || !body) {
+            showMessage('Заповніть всі поля', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/posts/${editingPostId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: editingPostId, title, body, userId })
+            });
+
+            if (!response.ok) throw new Error('Помилка оновлення поста');
+
+            const updatedPost = await response.json();
+            posts = posts.map(post => post.id === editingPostId ? updatedPost : post);
+            displayPosts();
+            clearForm();
+            showMessage('Пост успішно оновлено!', 'success');
+        } catch (error) {
+            showMessage(error.message, 'error');
+        }
+    }
+
+    // DELETE - Видалення поста
+    async function deletePost(postId) {
+        if (!confirm('Ви впевнені, що хочете видалити цей пост?')) return;
+
+        try {
+            const response = await fetch(`${API_URL}/posts/${postId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) throw new Error('Помилка видалення поста');
+
+            posts = posts.filter(post => post.id !== postId);
+            displayPosts();
+            showMessage('Пост успішно видалено!', 'success');
+        } catch (error) {
+            showMessage(error.message, 'error');
+        }
+    }
+
+    // Почати редагування
+    function startEdit(postId) {
+        const post = posts.find(p => p.id === postId);
+        if (!post) return;
+
+        editingPostId = postId;
+        document.getElementById('post-title').value = post.title;
+        document.getElementById('post-body').value = post.body;
+        document.getElementById('post-userId').value = post.userId;
+        document.getElementById('form-title').textContent = 'Редагувати пост';
+        document.getElementById('submit-btn').textContent = 'Оновити';
+        document.getElementById('cancel-btn').style.display = 'block';
+        displayPosts();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Скасувати редагування
+    function cancelEdit() {
+        clearForm();
+    }
+
+    // Очистити форму
+    function clearForm() {
+        editingPostId = null;
+        document.getElementById('post-title').value = '';
+        document.getElementById('post-body').value = '';
+        document.getElementById('post-userId').value = '1';
+        document.getElementById('form-title').textContent = 'Створити новий пост';
+        document.getElementById('submit-btn').textContent = 'Створити';
+        document.getElementById('cancel-btn').style.display = 'none';
+        displayPosts();
+    }
+
+    // Обробка форми
+    function handleSubmit() {
+        if (editingPostId) {
+            updatePost();
+        } else {
+            createPost();
+        }
+    }
+
+    // Завантаження даних при старті
+    fetchUsers();
+</script>
+</body>
+</html>

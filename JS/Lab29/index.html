@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Лабораторна робота 29</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            margin-top: 30px;
+        }
+        input {
+            padding: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 6px 12px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Лабораторна робота 29</h1>
+
+<!-- ------------------------ 1. Таймер ------------------------ -->
+<h2>1. Таймер зворотного відліку</h2>
+<input type="number" id="timerInput" placeholder="Введіть секунди">
+<button onclick="startTimer()">Старт</button>
+<p id="timerOutput"></p>
+
+<!-- ------------------------ 2. Поточний час ------------------------ -->
+<h2>2. Поточний час</h2>
+<p id="currentTime"></p>
+
+<!-- ------------------------ 3. Будильник ------------------------ -->
+<h2>3. Будильник</h2>
+<label>Години: <input type="number" id="alarmHour" min="0" max="23"></label>
+<label>Хвилини: <input type="number" id="alarmMinute" min="0" max="59"></label>
+<button onclick="setAlarm()">Встановити будильник</button>
+<p id="alarmStatus"></p>
+
+<script>
+    /* ----------------------- 1. Таймер зворотного відліку ----------------------- */
+    let timerInterval;
+
+    function startTimer() {
+        clearInterval(timerInterval);
+
+        let seconds = parseInt(document.getElementById("timerInput").value);
+        const output = document.getElementById("timerOutput");
+
+        if (isNaN(seconds) || seconds <= 0) {
+            output.textContent = "Введіть коректне число!";
+            return;
+        }
+
+        timerInterval = setInterval(() => {
+            output.textContent = `Залишилось: ${seconds} сек.`;
+            seconds--;
+
+            if (seconds < 0) {
+                clearInterval(timerInterval);
+                output.textContent = "Час вийшов!";
+            }
+        }, 1000);
+    }
+
+    /* ----------------------- 2. Поточний час ----------------------- */
+    function updateCurrentTime() {
+        const now = new Date();
+
+        let h = now.getHours().toString().padStart(2, "0");
+        let m = now.getMinutes().toString().padStart(2, "0");
+        let s = now.getSeconds().toString().padStart(2, "0");
+
+        document.getElementById("currentTime").textContent = `${h}:${m}:${s}`;
+    }
+
+    setInterval(updateCurrentTime, 1000);
+    updateCurrentTime();
+
+    /* ----------------------- 3. Будильник ----------------------- */
+    let alarmHour = null;
+    let alarmMinute = null;
+
+    function setAlarm() {
+        alarmHour = parseInt(document.getElementById("alarmHour").value);
+        alarmMinute = parseInt(document.getElementById("alarmMinute").value);
+
+        if (isNaN(alarmHour) || isNaN(alarmMinute)) {
+            document.getElementById("alarmStatus").textContent = "Введіть коректні значення!";
+            return;
+        }
+
+        document.getElementById("alarmStatus").textContent =
+            `Будильник встановлено на ${alarmHour.toString().padStart(2,"0")}:${alarmMinute.toString().padStart(2,"0")}`;
+    }
+
+    setInterval(() => {
+        const now = new Date();
+
+        if (now.getHours() === alarmHour && now.getMinutes() === alarmMinute && now.getSeconds() === 0) {
+            alert("Будильник! Час настав!");
+        }
+    }, 1000);
+
+</script>
+
+</body>
+</html>
