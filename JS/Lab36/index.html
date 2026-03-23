@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лабораторна робота — JSX Синтаксис</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:        #0c0e14;
+            --surface:   #13151f;
+            --surface2:  #1a1d2e;
+            --border:    #2a2d42;
+            --accent:    #5b7fff;
+            --accent2:   #a78bfa;
+            --green:     #34d399;
+            --yellow:    #fbbf24;
+            --red:       #f87171;
+            --text:      #e8eaf2;
+            --muted:     #6b7280;
+            --radius:    14px;
+            --font-head: 'Unbounded', sans-serif;
+            --font-body: 'Golos Text', sans-serif;
+        }
+
+        body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        .app {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 4rem;
+            animation: fadeIn .4s ease;
+        }
+
+        /* ── HEADER ── */
+        .header { margin-bottom: 2rem; }
+        .header-label {
+            font-family: var(--font-head);
+            font-size: .6rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: .5rem;
+        }
+        .header h1 {
+            font-family: var(--font-head);
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.3;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header p { color: var(--muted); font-size: .88rem; margin-top: .4rem; }
+
+        /* ── TABS ── */
+        .tabs {
+            display: flex;
+            gap: .4rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: .35rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .tab {
+            flex: 1;
+            min-width: 100px;
+            padding: .55rem .5rem;
+            border: none;
+            border-radius: calc(var(--radius) - 4px);
+            background: transparent;
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-size: .82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .tab.active {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            position: relative;
+            animation: fadeIn .3s ease;
+            margin-bottom: 1rem;
+        }
+        .card-badge {
+            position: absolute;
+            top: -1px; right: 1.2rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            font-size: .6rem;
+            font-family: var(--font-head);
+            letter-spacing: .05em;
+            color: var(--accent);
+            padding: .25rem .7rem;
+        }
+
+        /* ── USER CARD ── */
+        .user-card-inner {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-top: .5rem;
+        }
+        .user-avatar {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-head);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .user-info h2 {
+            font-family: var(--font-head);
+            font-size: .95rem;
+            font-weight: 600;
+            margin-bottom: .3rem;
+        }
+        .user-info p { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+        .user-info span { color: var(--text); font-weight: 500; }
+
+        /* ── STYLED TEXT ── */
+        .styled-demo {
+            margin-top: .75rem;
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
+        }
+        .styled-row {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .7rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .styled-label { font-size: .72rem; font-family: var(--font-head); color: var(--muted); flex-shrink: 0; }
+
+        /* ── BOOK LIST ── */
+        .book-list { display: flex; flex-direction: column; gap: .4rem; margin-top: .75rem; }
+        .book-item {
+            display: flex;
+            align-items: center;
+            gap: .9rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .65rem 1rem;
+            transition: border-color .15s;
+        }
+        .book-item:hover { border-color: var(--accent); }
+        .book-num {
+            font-family: var(--font-head);
+            font-size: .65rem;
+            color: var(--muted);
+            min-width: 1.5rem;
+        }
+        .book-icon { font-size: 1rem; }
+        .book-title { font-size: .9rem; font-weight: 500; }
+
+        /* ── TODO LIST ── */
+        .todo-input-row {
+            display: flex;
+            gap: .6rem;
+            margin-bottom: 1rem;
+        }
+        .input {
+            flex: 1;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .6rem .9rem;
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: .88rem;
+            outline: none;
+            transition: border-color .15s;
+        }
+        .input:focus { border-color: var(--accent); }
+        .input::placeholder { color: var(--muted); }
+        .btn {
+            padding: .6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            font-family: var(--font-body);
+            font-size: .88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .btn:active { transform: scale(.96); }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: #7090ff; }
+
+        .todo-list { display: flex; flex-direction: column; gap: .4rem; }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .65rem 1rem;
+            transition: all .15s;
+        }
+        .todo-item.done { opacity: .5; }
+        .todo-check {
+            width: 18px; height: 18px;
+            border-radius: 5px;
+            border: 2px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .7rem;
+            transition: all .15s;
+        }
+        .todo-check.checked { background: var(--green); border-color: var(--green); color: #000; }
+        .todo-text { flex: 1; font-size: .9rem; }
+        .todo-text.done { text-decoration: line-through; }
+        .btn-remove {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            border-radius: 6px;
+            width: 26px; height: 26px;
+            font-size: .72rem;
+            cursor: pointer;
+            transition: all .15s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-remove:hover {
+            background: color-mix(in srgb, var(--red) 15%, transparent);
+            border-color: var(--red);
+            color: var(--red);
+        }
+        .empty-msg { color: var(--muted); font-size: .88rem; text-align: center; padding: 1rem 0; }
+
+        /* ── WEATHER CARD ── */
+        .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: .75rem; }
+        @media (max-width: 480px) { .weather-grid { grid-template-columns: 1fr; } }
+        .weather-item {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.1rem;
+        }
+        .weather-label {
+            font-size: .65rem;
+            font-family: var(--font-head);
+            color: var(--muted);
+            letter-spacing: .05em;
+            margin-bottom: .4rem;
+        }
+        .weather-value { font-size: 1.4rem; font-weight: 600; font-family: var(--font-head); }
+        .weather-icon { font-size: 2rem; margin-bottom: .3rem; display: block; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState } = React;
+
+    /* ══════════════════════════════════════════
+       ЗАВДАННЯ 1 — UserCard
+       Фігурні дужки для вставки даних у JSX
+    ══════════════════════════════════════════ */
+    function UserCard({ name, age }) {
+        const initials = name.split(" ").map(w => w[0]).join("").toUpperCase();
+        return (
+            <div className="card">
+                <span className="card-badge">Завдання 1 — JSX вирази</span>
+                <div className="user-card-inner">
+                    <div className="user-avatar">{initials}</div>
+                    <div className="user-info">
+                        <h2>{name}</h2>
+                        <p>Ім'я: <span>{name}</span></p>
+                        <p>Вік: <span>{age} років</span></p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    /* ══════════════════════════════════════════
+       ЗАВДАННЯ 2 — StyledText
+       Стилі як JavaScript-об'єкт у style={}
+    ══════════════════════════════════════════ */
+    function StyledText() {
+        const styles = [
+            {
+                label: "color + fontSize",
+                style: { color: "#5b7fff", fontSize: "18px", fontWeight: "600" },
+                text: "Синій жирний текст, 18px"
+            },
+            {
+                label: "color + fontStyle",
+                style: { color: "#34d399", fontSize: "15px", fontStyle: "italic" },
+                text: "Зелений курсивний текст"
+            },
+            {
+                label: "background + padding",
+                style: {
+                    background: "linear-gradient(135deg,#a78bfa,#5b7fff)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontSize: "20px",
+                    fontWeight: "700"
+                },
+                text: "Градієнтний текст через style={}"
+            },
+        ];
+
+        return (
+            <div className="card">
+                <span className="card-badge">Завдання 2 — style як об'єкт</span>
+                <div className="styled-demo">
+                    {styles.map((item, i) => (
+                        <div className="styled-row" key={i}>
+                            <span className="styled-label">{item.label}</span>
+                            <p style={item.style}>{item.text}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    /* ══════════════════════════════════════════
+       ЗАВДАННЯ 3 — BookList
+       Масив + .map() → <ul>/<li>
+    ══════════════════════════════════════════ */
+    function BookList() {
+        const books = [
+            "Clean Code",
+            "JavaScript: The Good Parts",
+            "You Don't Know JS",
+            "React Explained",
+            "The Pragmatic Programmer",
+        ];
+
+        return (
+            <div className="card">
+                <span className="card-badge">Завдання 3 — .map()</span>
+                <ul className="book-list" style={{ listStyle: "none" }}>
+                    {books.map((book, index) => (
+                        <li key={index} className="book-item">
+                            <span className="book-num">{String(index + 1).padStart(2, "0")}</span>
+                            <span className="book-icon">📖</span>
+                            <span className="book-title">{book}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
+
+    /* ══════════════════════════════════════════
+       ДОДАТКОВЕ — TodoList
+       Масив завдань через props
+    ══════════════════════════════════════════ */
+    function TodoList() {
+        const [todos, setTodos] = useState([
+            { id: 1, text: "Вивчити JSX синтаксис", done: false },
+            { id: 2, text: "Зробити лабораторну роботу", done: false },
+            { id: 3, text: "Розібрати компоненти React", done: false },
+        ]);
+        const [input, setInput] = useState("");
+
+        const addTodo = () => {
+            if (!input.trim()) return;
+            setTodos([...todos, { id: Date.now(), text: input.trim(), done: false }]);
+            setInput("");
+        };
+
+        const toggle = (id) =>
+            setTodos(todos.map(t => t.id === id ? { ...t, done: !t.done } : t));
+
+        const remove = (id) =>
+            setTodos(todos.filter(t => t.id !== id));
+
+        return (
+            <div className="card">
+                <span className="card-badge">Додаткове — TodoList</span>
+                <div className="todo-input-row">
+                    <input
+                        className="input"
+                        placeholder="Нове завдання..."
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && addTodo()}
+                    />
+                    <button className="btn btn-primary" onClick={addTodo}>Додати</button>
+                </div>
+
+                <div className="todo-list">
+                    {todos.length === 0 && <p className="empty-msg">Список порожній</p>}
+                    {todos.map(todo => (
+                        <div key={todo.id} className={`todo-item ${todo.done ? "done" : ""}`}>
+                            <div
+                                className={`todo-check ${todo.done ? "checked" : ""}`}
+                                onClick={() => toggle(todo.id)}
+                            >
+                                {todo.done && "✓"}
+                            </div>
+                            <span className={`todo-text ${todo.done ? "done" : ""}`}>{todo.text}</span>
+                            <button className="btn-remove" onClick={() => remove(todo.id)}>✕</button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    /* ══════════════════════════════════════════
+       ДОДАТКОВЕ — WeatherCard
+       Стилі для кожного елемента
+    ══════════════════════════════════════════ */
+    function WeatherCard({ city, temp, condition, icon, color }) {
+        return (
+            <div className="weather-item" style={{ borderColor: color + "44" }}>
+                <span className="weather-icon">{icon}</span>
+                <div className="weather-label">Місто</div>
+                <div className="weather-value" style={{ color: color, fontSize: "1rem" }}>{city}</div>
+                <div className="weather-label" style={{ marginTop: ".6rem" }}>Температура</div>
+                <div className="weather-value" style={{ color: color }}>{temp}°C</div>
+                <div className="weather-label" style={{ marginTop: ".6rem" }}>Стан</div>
+                <div style={{ fontSize: ".88rem", color: "#e8eaf2" }}>{condition}</div>
+            </div>
+        );
+    }
+
+    function WeatherBoard() {
+        const cities = [
+            { city: "Київ",     temp: 18, condition: "Хмарно",       icon: "🌥️", color: "#a78bfa" },
+            { city: "Львів",    temp: 15, condition: "Дощ",           icon: "🌧️", color: "#5b7fff" },
+            { city: "Одеса",    temp: 24, condition: "Сонячно",       icon: "☀️", color: "#fbbf24" },
+            { city: "Харків",   temp: 20, condition: "Грозa",         icon: "⛈️", color: "#f87171" },
+        ];
+
+        return (
+            <div className="card">
+                <span className="card-badge">Додаткове — WeatherCard</span>
+                <div className="weather-grid">
+                    {cities.map((c, i) => <WeatherCard key={i} {...c} />)}
+                </div>
+            </div>
+        );
+    }
+
+    /* ══════════════════════════════════════════
+       ГОЛОВНИЙ ДОДАТОК
+    ══════════════════════════════════════════ */
+    function App() {
+        const [tab, setTab] = useState(0);
+        const tabs = ["Завдання 1", "Завдання 2", "Завдання 3", "Додаткове"];
+
+        return (
+            <div className="app">
+                <header className="header">
+                    <p className="header-label">Лабораторна робота · React</p>
+                    <h1>JSX синтаксис та основи роботи з елементами</h1>
+                    <p>Динамічний контент, стилі, списки та компоненти</p>
+                </header>
+
+                <div className="tabs">
+                    {tabs.map((t, i) => (
+                        <button
+                            key={i}
+                            className={`tab ${tab === i ? "active" : ""}`}
+                            onClick={() => setTab(i)}
+                        >
+                            {t}
+                        </button>
+                    ))}
+                </div>
+
+                {tab === 0 && (
+                    <>
+                        <UserCard name="Олексій Мельник"  age={21} />
+                        <UserCard name="Марія Шевченко"   age={19} />
+                    </>
+                )}
+                {tab === 1 && <StyledText />}
+                {tab === 2 && <BookList />}
+                {tab === 3 && (
+                    <>
+                        <TodoList />
+                        <WeatherBoard />
+                    </>
+                )}
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+</script>
+</body>
+</html>

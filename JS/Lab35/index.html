@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лабораторна робота — React Компоненти</title>
+
+    <!-- React + ReactDOM + Babel (JSX у браузері) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #0c0e14;
+            --surface:  #13151f;
+            --surface2: #1a1d2e;
+            --border:   #2a2d42;
+            --accent:   #5b7fff;
+            --accent2:  #a78bfa;
+            --green:    #34d399;
+            --red:      #f87171;
+            --text:     #e8eaf2;
+            --muted:    #6b7280;
+            --radius:   14px;
+            --font-head: 'Unbounded', sans-serif;
+            --font-body: 'Golos Text', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            min-height: 100vh;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        /* ── APP ── */
+        .app {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 4rem;
+            animation: fadeIn .4s ease;
+        }
+
+        /* ── HEADER ── */
+        .header { margin-bottom: 2rem; }
+        .header-label {
+            font-family: var(--font-head);
+            font-size: .6rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: .5rem;
+        }
+        .header h1 {
+            font-family: var(--font-head);
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.3;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header p { color: var(--muted); font-size: .88rem; margin-top: .4rem; }
+
+        /* ── TABS ── */
+        .tabs {
+            display: flex;
+            gap: .4rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: .35rem;
+            margin-bottom: 1.5rem;
+        }
+        .tab {
+            flex: 1;
+            padding: .55rem .5rem;
+            border: none;
+            border-radius: calc(var(--radius) - 4px);
+            background: transparent;
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-size: .82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .tab.active {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            position: relative;
+            animation: fadeIn .3s ease;
+            margin-bottom: 1rem;
+        }
+        .card-badge {
+            position: absolute;
+            top: -1px; right: 1.2rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            font-size: .6rem;
+            font-family: var(--font-head);
+            letter-spacing: .05em;
+            color: var(--accent);
+            padding: .25rem .7rem;
+        }
+
+        /* ── USER CARD ── */
+        .greeting {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-top: .5rem;
+        }
+        .greeting strong { color: var(--accent2); font-weight: 600; }
+
+        /* ── COUNTER ── */
+        .counter-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+        .counter-value {
+            font-family: var(--font-head);
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+        .counter-buttons { display: flex; gap: .75rem; justify-content: center; }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: .6rem 1.4rem;
+            border-radius: 8px;
+            border: none;
+            font-family: var(--font-body);
+            font-size: .88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .btn:active { transform: scale(.96); }
+        .btn-primary  { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: #7090ff; }
+        .btn-secondary {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+        .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+
+        /* ── STUDENT LIST ── */
+        .list-title {
+            font-family: var(--font-head);
+            font-size: .9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-top: .25rem;
+        }
+        .student-list { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.25rem; }
+        .student-row-wrap { display: flex; align-items: center; gap: .5rem; }
+        .student-row {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2rem 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .65rem 1rem;
+            transition: border-color .15s;
+        }
+        .student-row:hover { border-color: var(--accent); }
+        .student-index { font-family: var(--font-head); font-size: .65rem; color: var(--muted); }
+        .student-name  { font-weight: 500; font-size: .92rem; }
+        .student-group {
+            font-size: .75rem;
+            font-family: var(--font-head);
+            background: color-mix(in srgb, var(--accent) 15%, transparent);
+            color: var(--accent);
+            border-radius: 5px;
+            padding: .2rem .55rem;
+        }
+        .btn-remove {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            border-radius: 6px;
+            width: 28px; height: 28px;
+            font-size: .75rem;
+            cursor: pointer;
+            transition: all .15s;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .btn-remove:hover {
+            background: color-mix(in srgb, var(--red) 15%, transparent);
+            border-color: var(--red);
+            color: var(--red);
+        }
+        .empty-msg { color: var(--muted); font-size: .88rem; text-align: center; padding: 1rem 0; }
+
+        /* ── FORM ── */
+        .add-form { display: flex; gap: .6rem; flex-wrap: wrap; }
+        .input {
+            flex: 1;
+            min-width: 120px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .6rem .9rem;
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: .88rem;
+            outline: none;
+            transition: border-color .15s;
+        }
+        .input:focus { border-color: var(--accent); }
+        .input.input-error { border-color: var(--red); }
+        .input::placeholder { color: var(--muted); }
+        .error-msg { color: var(--red); font-size: .8rem; margin-top: .5rem; }
+
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState, Component } = React;
+
+    /* ══════════════════════════════════════════
+       ЗАВДАННЯ 1 — Функціональний компонент
+       UserInfo: приймає name та age через props
+    ══════════════════════════════════════════ */
+    function UserInfo({ name, age }) {
+        return (
+            <div className="card user-card">
+                <span className="card-badge">Функціональний компонент</span>
+                <p className="greeting">
+                    Привіт, мене звати <strong>{name}</strong>, мені <strong>{age}</strong> років.
+                </p>
+            </div>
+        );
+    }
+
+    /* ══════════════════════════════════════════
+       ЗАВДАННЯ 2 — Класовий компонент
+       Counter: зберігає стан лічильника
+    ══════════════════════════════════════════ */
+    class Counter extends Component {
+        constructor(props) {
+            super(props);
+            this.state = { count: 0 };
+        }
+
+        increment = () => this.setState(prev => ({ count: prev.count + 1 }));
+        decrement = () => this.setState(prev => ({ count: Math.max(0, prev.count - 1) }));
+        reset     = () => this.setState({ count: 0 });
+
+        render() {
+            const { count } = this.state;
+            return (
+                <div className="card counter-card">
+                    <span className="card-badge">Класовий компонент</span>
+                    <div className="counter-display">
+                        <span className="counter-value">{count}</span>
+                    </div>
+                    <div className="counter-buttons">
+                        <button className="btn btn-secondary" onClick={this.decrement}>−</button>
+                        <button className="btn btn-primary"   onClick={this.increment}>Збільшити</button>
+                        <button className="btn btn-ghost"     onClick={this.reset}>↺ Скинути</button>
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    /* ══════════════════════════════════════════
+       ДОДАТКОВЕ ЗАВДАННЯ
+       StudentItem — функціональний
+       StudentList  — класовий
+    ══════════════════════════════════════════ */
+    function StudentItem({ name, group, index }) {
+        return (
+            <div className="student-row">
+                <span className="student-index">{String(index + 1).padStart(2, "0")}</span>
+                <span className="student-name">{name}</span>
+                <span className="student-group">{group}</span>
+            </div>
+        );
+    }
+
+    class StudentList extends Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                students: [
+                    { id: 1, name: "Оленка Бондаренко", group: "КН-21" },
+                    { id: 2, name: "Михайло Ткач",       group: "КН-22" },
+                    { id: 3, name: "Соня Коваль",         group: "КН-21" },
+                ],
+                newName:  "",
+                newGroup: "",
+                error:    "",
+            };
+        }
+
+        handleAdd = () => {
+            const { newName, newGroup, students } = this.state;
+            if (!newName.trim() || !newGroup.trim()) {
+                this.setState({ error: "Заповніть обидва поля" });
+                return;
+            }
+            this.setState({
+                students: [...students, { id: Date.now(), name: newName.trim(), group: newGroup.trim() }],
+                newName:  "",
+                newGroup: "",
+                error:    "",
+            });
+        };
+
+        handleRemove = (id) => {
+            this.setState(prev => ({ students: prev.students.filter(s => s.id !== id) }));
+        };
+
+        handleKey = (e) => { if (e.key === "Enter") this.handleAdd(); };
+
+        render() {
+            const { students, newName, newGroup, error } = this.state;
+            return (
+                <div className="card list-card">
+                    <span className="card-badge">Класовий + Функціональний</span>
+                    <h3 className="list-title">Список студентів</h3>
+
+                    <div className="student-list">
+                        {students.length === 0 && <p className="empty-msg">Список порожній</p>}
+                        {students.map((s, i) => (
+                            <div key={s.id} className="student-row-wrap">
+                                <StudentItem name={s.name} group={s.group} index={i} />
+                                <button className="btn-remove" onClick={() => this.handleRemove(s.id)}>✕</button>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="add-form">
+                        <input
+                            className={`input ${error ? "input-error" : ""}`}
+                            placeholder="Ім'я студента"
+                            value={newName}
+                            onChange={e => this.setState({ newName: e.target.value, error: "" })}
+                            onKeyDown={this.handleKey}
+                        />
+                        <input
+                            className={`input ${error ? "input-error" : ""}`}
+                            placeholder="Група"
+                            value={newGroup}
+                            onChange={e => this.setState({ newGroup: e.target.value, error: "" })}
+                            onKeyDown={this.handleKey}
+                        />
+                        <button className="btn btn-primary" onClick={this.handleAdd}>Додати</button>
+                    </div>
+                    {error && <p className="error-msg">{error}</p>}
+                </div>
+            );
+        }
+    }
+
+    /* ══════════════════════════════════════════
+       ГОЛОВНИЙ ДОДАТОК
+    ══════════════════════════════════════════ */
+    function App() {
+        const [tab, setTab] = useState(0);
+        const tabs = ["Завдання 1", "Завдання 2", "Додаткове"];
+
+        return (
+            <div className="app">
+                <header className="header">
+                    <p className="header-label">Лабораторна робота · React</p>
+                    <h1>Функціональні та класові компоненти</h1>
+                    <p>Демонстрація основних типів компонентів у React</p>
+                </header>
+
+                <div className="tabs">
+                    {tabs.map((t, i) => (
+                        <button
+                            key={i}
+                            className={`tab ${tab === i ? "active" : ""}`}
+                            onClick={() => setTab(i)}
+                        >
+                            {t}
+                        </button>
+                    ))}
+                </div>
+
+                {tab === 0 && (
+                    <>
+                        <UserInfo name="Олексій Мельник"   age={20} />
+                        <UserInfo name="Марія Шевченко"    age={21} />
+                        <UserInfo name="Дмитро Іванченко"  age={19} />
+                    </>
+                )}
+
+                {tab === 1 && <Counter />}
+
+                {tab === 2 && <StudentList />}
+
+            </div>
+        );
+    }
+
+    /* ── Рендер ── */
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+</script>
+</body>
+</html>
